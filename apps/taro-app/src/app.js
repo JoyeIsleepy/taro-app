@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react'
-import { useDidShow, useDidHide } from '@tarojs/taro'
-import '@nutui/nutui-react-taro/dist/style.css'
-// 全局样式
+
+import { useLaunch } from '@tarojs/taro'
+
 import './app.scss'
 
-function App(props) {
-  // 可以使用所有的 React Hooks
-  useEffect(() => {})
+function App({ children }) {
+  useLaunch(() => {
+    console.log('App launched.')
+  })
 
-  // 对应 onShow
-  useDidShow(() => {})
-
-  // 对应 onHide
-  useDidHide(() => {})
-
-  return props.children
+  // children 是将要会渲染的页面
+  return children
 }
+  
+
 
 export default App
