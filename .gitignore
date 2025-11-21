@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+.esbuild/
+
+# Webpack/Vite cache
+.cache/
+.temp/
+.temp/
+.vite/
+
+# Editor
+.DS_Store
+.idea/
+.vscode/
+
+# Env
+.env
+.env.*
