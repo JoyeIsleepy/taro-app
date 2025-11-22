@@ -1,0 +1,16 @@
+// my-monorepo/.vscode/settings.json
+{
+  // 保存文件时自动格式化
+  "editor.formatOnSave": true,
+  // 选择 Prettier 作为默认格式化工具
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 仅对指定语言启用 Prettier（可选，根据项目调整）
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 忽略不需要格式化的文件（与 .prettierignore 一致）
+  "prettier.ignorePath": ".prettierignore"
+}

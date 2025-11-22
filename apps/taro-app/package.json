@@ -64,7 +64,7 @@
     "react": "^18.0.0"
   },
   "devDependencies": {
-    "@tarojs/plugin-generator": "4.1.8", 
+    "@tarojs/plugin-generator": "4.1.8",
     "lint-staged": "^16.1.2",
     "stylelint-config-standard": "^38.0.0",
     "@babel/core": "^7.24.4",
