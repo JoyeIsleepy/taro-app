@@ -1,6 +1,8 @@
-import { demoService } from "../services/demo.js";
+import { demoService } from '../services/demo.js';
+import { User } from '../models/user.js';
+import { throwError } from '../middlewares/response.js';
 
-export const demoController = async (ctx) => {
+export const demoController = async ctx => {
   // try {
   //   // 1. 从 ctx 中获取你需要的入参
   //   // 这里演示了几种常见的参数获取方式
@@ -23,20 +25,34 @@ export const demoController = async (ctx) => {
   // 错误处理
 
   const postData = ctx.request.body;
+  const queryParams = ctx.query;
+  console.log(queryParams, 'queryParams');
 
   // 示例1：手动校验失败，直接抛出错误
-  if (!postData || !postData.username) {
-    // 主动抛出一个 Error 对象
-    // 你可以自定义错误信息和状态码
-    const error = new Error("用户名不能为空");
-    error.status = 400; // 例如，400 Bad Request
-    throw error;
+  // if (!queryParams || !queryParams.name || !queryParams.walletAddress) {
+  //   // 主动抛出一个 Error 对象
+  //   // 你可以自定义错误信息和状态码
+  //   const error = new Error('用户名不能为空');
+  //   error.status = 400; // 例如，400 Bad Request
+  //   throw error;
+  // }
+
+  const { name, walletAddress } = queryParams;
+
+  // 1. 先查询是否存在
+  const existingUser = await User.findOne({ walletAddress });
+
+  if (existingUser) {
+    throwError(`用户已存在${walletAddress}`, 400);
   }
+
+  // 2. 如果不存在，则创建新用户
+  const newUser = new User({ name, walletAddress });
+  await newUser.save();
 
   // 示例2：调用 service，如果 service 内部抛出错误，也会被中间件捕获
   const serviceResult = await demoService(postData);
 
   // 如果一切正常，设置成功的响应体
   ctx.body = serviceResult;
-  // }
 };
