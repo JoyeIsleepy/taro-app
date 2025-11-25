@@ -5,7 +5,8 @@ import { loadEnv } from '../config.js'; // 假设你的环境变量加载函数�
 // 确保在使用 process.env 之前加载环境变量
 loadEnv();
 
-const MONGO_URI = process.env.MONGO_URI;
+// 如果本地启动（LOCAL_DB=true），则用公网 IP 连接
+const MONGO_URI = process.env.LOCAL_DB ? 'mongodb://localhost:27017/koa-db' : process.env.MONGO_URI;
 
 // 用于存储数据库连接状态，避免重复连接
 let isConnected = false;

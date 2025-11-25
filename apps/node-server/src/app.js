@@ -2,7 +2,7 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import cors from 'koa2-cors';
 import router from './routes/index.js';
-import { connectMongo } from './db/mongoose.js'; // ⭐ 关键
+import { connectMongo } from './middlewares/mongoose.js'; // ⭐ 关键
 import errorMiddleware from './middlewares/error.js';
 import responseMiddleware from './middlewares/responseMiddleware.js'; // 注意路径
 import { loadEnv } from './config.js';

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View } from '@tarojs/components';
+import { Button, View } from '@tarojs/components';
 import { createOrder } from '../../server/order';
 import styles from './index.module.scss';
 
 function Index() {
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   async function getData() {
     const res = await createOrder({
-      name: 'demoname133',
-      walletAddress: '0x1234567890abcdef1234567890abcdef12345662',
+      name: 'demoname122',
+      walletAddress: '0x1234567890abcdef1234567890abcdef12345555',
       age: 12,
     });
     console.log(res, 'res');
@@ -20,6 +20,7 @@ function Index() {
   return (
     <View className={styles.order}>
       <View>home--</View>
+      <Button onClick={getData}>创建订单</Button>
     </View>
   );
 }

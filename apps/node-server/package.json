@@ -4,7 +4,7 @@
   "type": "module",
   "main": "src/app.js",
   "scripts": {
-    "dev": "nodemon src/app.js",
+    "dev": "cross-env LOCAL_DB= nodemon src/app.js",
     "start": "node src/app.js"
   },
   "dependencies": {
@@ -14,5 +14,8 @@
     "koa2-cors": "^2.0.6",
     "mongoose": "^9.0.0",
     "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }
