@@ -3,15 +3,15 @@ export default {
     devServer: {},
   },
   h5: {
-    publicPath: "/apps/taro-app/", // 开发环境使用根路径
-    staticDirectory: "assets", // 静态文件目录
+    publicPath: './', // 开发环境使用根路径
+    // staticDirectory: 'assets', // 静态文件目录
     devServer: {
       proxy: {
-        "/api": {
-          target: "http://localhost:3001",
+        '/api': {
+          target: 'http://localhost:3001',
           changeOrigin: true,
           pathRewrite: {
-            "^/api": "/api",
+            '^/api': '/api',
           },
         },
       },
