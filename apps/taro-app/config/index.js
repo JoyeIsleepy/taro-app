@@ -1,4 +1,5 @@
 import { defineConfig } from '@tarojs/cli';
+import vitePluginImp from 'vite-plugin-imp';
 
 import devConfig from './dev';
 import prodConfig from './prod';
@@ -37,9 +38,27 @@ export default defineConfig(async (merge, { command, mode }) => {
       options: {},
     },
     framework: 'react',
-    compiler: 'vite',
+    compiler: {
+      type: 'vite',
+      vitePlugins: [
+        vitePluginImp({
+          libList: [
+            {
+              libName: '@nutui/nutui-react-taro',
+              style: name => {
+                // 按需引入 css 文件的处理，两种方式择其一
+                return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style/style.css`;
+              },
+              replaceOldImport: false,
+              camel2DashComponentName: false,
+            },
+          ],
+        }),
+      ],
+    },
     sass: {
-      data: '@use "@nutui/nutui-react-taro/dist/styles/variables.scss" as *;',
+      resource: ['node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss'],
+      // data: '@import "@nutui/nutui-react-taro/dist/styles/variables.scss";',
       // JMAPP 主题
       // data: `@import '@nutui/nutui-react-taro/dist/styles/variables-jmapp.scss';`
       // JRKF 主题
@@ -51,8 +70,13 @@ export default defineConfig(async (merge, { command, mode }) => {
           enable: true,
           config: {},
         },
+        miniCssExtractPluginOption: {
+          ignoreOrder: true,
+          filename: 'css/[name].[hash].css',
+          chunkFilename: 'css/[name].[chunkhash].css',
+        },
         cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: true, // 默认为 false，如需使用 css modules 功能，则设为 true
           config: {
             namingPattern: 'module', // 转换模式，取值为 global/module
             generateScopedName: '[name]__[local]___[hash:base64:5]',

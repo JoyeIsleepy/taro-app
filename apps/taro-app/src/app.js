@@ -1,6 +1,7 @@
 import { useLaunch } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { ConfigProvider } from '@nutui/nutui-react-taro';
+import '@nutui/nutui-react-taro/dist/styles/themes/default.css';
 import './app.scss';
 
 function App({ children }) {
@@ -15,7 +16,7 @@ function App({ children }) {
   });
 
   // children 是将要会渲染的页面
-  return <ConfigProvider theme={themeVars}>{children}</ConfigProvider>;
+  return children;
 }
 
 export default App;
