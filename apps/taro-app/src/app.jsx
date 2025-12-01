@@ -1,10 +1,15 @@
+// app.tsx
+import { useState, useEffect } from 'react';
+import Taro from '@tarojs/taro';
 import { useLaunch } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { ConfigProvider } from '@nutui/nutui-react-taro';
+import Loading from './components/Loading';
 import '@nutui/nutui-react-taro/dist/styles/themes/default.css';
 import './app.scss';
 
 function App({ children }) {
+  const [loading, setLoading] = useState(false);
   const themeVars = {
     nutuiColorPrimaryIcon: '#ec6606',
     nutuiColorPrimaryStop1: '#ec6606',
@@ -15,8 +20,7 @@ function App({ children }) {
     console.log('App launched.');
   });
 
-  // children 是将要会渲染的页面
-  return children;
+  return <ConfigProvider theme={themeVars}>{children}</ConfigProvider>;
 }
 
 export default App;

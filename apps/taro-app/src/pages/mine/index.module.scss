@@ -1,7 +1,50 @@
-.nutui-react-demo {
-  height: 100vh;
+.mine {
+  height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  background-color: #f5f5f5;
+  .bgImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+  }
+  .topImg {
+    @include card-style;
+    margin-top: 37%;
+    display: flex;
+    align-items: center;
+    .unnamedImage {
+      width: 140px;
+      height: 140px;
+    }
+  }
+  .title-1 {
+    font-size: 32px;
+    color: #333333;
+    font-weight: bolder;
+  }
+  .memberCard {
+    @include card-style;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title-2 {
+      font-size: 24px;
+      color: #999999;
+    }
+  }
+  .infoSection {
+    .title-1 {
+      margin: 40px 0 0 20px;
+    }
+    @include card-style;
+    margin-top: 20px;
+    padding: 0;
+  }
 }

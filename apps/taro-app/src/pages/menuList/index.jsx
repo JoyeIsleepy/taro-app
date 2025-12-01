@@ -1,141 +1,85 @@
-import React, { useState } from 'react';
-import { View, Text } from '@tarojs/components';
-import { SideBar, Elevator } from '@nutui/nutui-react-taro';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, ScrollView } from '@tarojs/components';
+import Taro from '@tarojs/taro';
+import { SideBar } from '@nutui/nutui-react-taro';
 import styles from './index.module.scss';
 
-function Index() {
-  const [value, setValue] = useState(0);
-  const list = Array.from(new Array(103).keys());
-  const dataList = [
-    {
-      title: 'A',
-      list: [
-        {
-          name: '安徽',
-          id: 1,
-        },
-      ],
-    },
-    {
-      title: 'B',
-      list: [
-        {
-          name: '北京',
-          id: 2,
-        },
-      ],
-    },
-    {
-      title: 'G',
-      list: [
-        {
-          name: '甘肃',
-          id: 31,
-        },
-        {
-          name: '广东',
-          id: 32,
-        },
-        {
-          name: '广东',
-          id: 33,
-        },
-        {
-          name: '贵州',
-          id: 34,
-        },
-      ],
-    },
-    {
-      title: 'H',
-      list: [
-        {
-          name: '湖南',
-          id: 41,
-        },
-        {
-          name: '湖北',
-          id: 42,
-        },
-        {
-          name: '湖北',
-          id: 43,
-        },
-        {
-          name: '湖南',
-          id: 44,
-        },
-        {
-          name: '海南',
-          id: 45,
-        },
-      ],
-    },
-    {
-      title: 'L',
-      list: [
-        {
-          name: '辽宁',
-          id: 51,
-        },
-      ],
-    },
-    {
-      title: 'S',
-      list: [
-        {
-          name: '山东',
-          id: 51,
-        },
-        {
-          name: '山西',
-          id: 52,
-        },
-        {
-          name: '上海',
-          id: 53,
-        },
-        {
-          name: '陕西',
-          id: 54,
-        },
-      ],
-    },
-  ];
-  const onItemClick = (key, item) => {
-    console.log(key, JSON.stringify(item));
+export default function Index() {
+  const sectionTops = useRef([]); // 各区块顶部位置
+  const [value, setValue] = useState(0); // 侧边栏选中项
+  const list = Array.from(new Array(20).keys()); // 20项
+  const [scrollIntoView, setScrollIntoView] = useState('');
+
+  useEffect(() => {
+    // 页面渲染后计算区块位置
+    Taro.nextTick(() => {
+      const query = Taro.createSelectorQuery();
+      list.forEach(item => {
+        query.select(`#section-${item}`).boundingClientRect();
+      });
+      query.exec(res => {
+        sectionTops.current = res.map(r => r.top);
+      });
+    });
+  }, []);
+
+  // 点击左侧
+  const handleSideClick = index => {
+    setValue(index);
+    setScrollIntoView(`section-${index}`);
   };
 
-  const onIndexClick = key => {
-    console.log(key);
+  // 监听右侧滚动
+  const handleRightScroll = e => {
+    const scrollTop = e.detail.scrollTop;
+
+    for (let i = 0; i < sectionTops.current.length - 1; i++) {
+      if (scrollTop >= sectionTops.current[i] && scrollTop < sectionTops.current[i + 1]) {
+        setValue(i);
+        return;
+      }
+    }
+    // 滚动到最后
+    setValue(sectionTops.current.length - 1);
   };
+
   return (
     <View className={styles.container}>
-      <SideBar value={value} onChange={val => setValue(val)} className="left-bar">
+      <View className={styles.memberCard}>
+        <View className={styles.item}>
+          <View className={styles['title-1']}>zzk会员卡</View>
+          <View className={styles['title-2']}>限时享大礼包</View>
+        </View>
+        <View type="primary">免费入会</View>
+      </View>
+
+      {/* 左侧菜单 */}
+      {/* <SideBar value={value} onChange={handleSideClick} className={styles.leftBar}>
         {list.map(item => (
-          <SideBar.Item key={item} title={`Opt ${item + 1}`} />
+          <SideBar.Item key={item} title={`分类 ${item + 1}`} />
         ))}
-      </SideBar>
-      <Elevator
-        showKeys={false}
-        list={dataList}
-        height="100%"
-        onItemClick={(key, item) => onItemClick(key, item)}
-        onIndexClick={key => onIndexClick(key)}
+      </SideBar> */}
+
+      {/* 右侧内容 */}
+      {/* <ScrollView
+        id="rightScroll"
+        scrollY
+        className={styles.rightContent}
+        scrollIntoView={scrollIntoView}
+        onScroll={handleRightScroll}
       >
-        <Elevator.Context.Consumer>
-          {value => {
-            return (
-              <>
-                <Text>{value?.name}</Text>
-                {/* <Fabulous style={{ marginLeft: '4px' }} height={12} /> */}
-              </>
-            );
-          }}
-        </Elevator.Context.Consumer>
-      </Elevator>
+        {list.map(item => (
+          <View
+            id={`section-${item}`}
+            className={styles.section}
+            key={item}
+            style={{ height: '400px' }}
+          >
+            <View className={styles.sectionTitle}>模块 {item + 1}</View>
+            <View className={styles.sectionBody}>内容区域 {item + 1}</View>
+          </View>
+        ))}
+      </ScrollView> */}
     </View>
   );
 }
-
-export default Index;

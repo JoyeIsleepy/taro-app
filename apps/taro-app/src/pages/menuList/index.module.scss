@@ -1,8 +1,25 @@
 .container {
   height: 100%;
   display: flex;
+  position: relative; // 必须
 
+  // nut-sidebar 隐藏内容区域
   :global(.nut-sidebar-content-wrap) {
     display: none;
+  }
+
+  // 顶部 180px 橙色背景 + 底部灰色背景
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    background-color: #ec6606;
+    z-index: -1; // 不遮挡内容
+  }
+  .memberCard {
+    @include card-style;
   }
 }

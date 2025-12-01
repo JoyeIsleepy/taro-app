@@ -6,3 +6,19 @@ body,
 .nut-configprovider {
   height: 100%;
 }
+div.taro_page_shade,
+div.taro_router
+  > .taro_page.taro_page_show.taro_page_stationed:not(.taro_page_shade):not(.taro_tabbar_page):not(
+    :last-child
+  ) {
+  display: initial;
+}
+
+div.taro_router > .taro_page {
+  transition-timing-function: cubic-bezier(0.26, 1, 0.48, 1);
+
+  // 修复 h5 首页中使用 useLoad 导致出现路由动画的问题
+  &:first-child {
+    transition: none;
+  }
+}

@@ -9,11 +9,11 @@
 
 ---
 
-## 🎯 示例：在 `node-server` 中安装 / 删除 koa
+## 🎯 示例：在 `taro-app` 中安装 / 删除 koa
 
-### ✅ 安装依赖到 node-server
+### ✅ 安装依赖到 taro-app
 ```bash
-pnpm --filter node-server add koa
+pnpm --filter taro-app add koa
 ```
 
 ### ❌ 错误写法（不要进入子目录执行）

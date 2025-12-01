@@ -1,5 +1,6 @@
 import { defineConfig } from '@tarojs/cli';
 import vitePluginImp from 'vite-plugin-imp';
+import path from 'path';
 
 import devConfig from './dev';
 import prodConfig from './prod';
@@ -29,6 +30,9 @@ export default defineConfig(async (merge, { command, mode }) => {
       375: 2,
       828: 1.81 / 2,
     },
+    alias: {
+      '@': path.resolve(process.cwd(), 'src'),
+    },
     sourceRoot: 'src',
     outputRoot: 'dist',
     plugins: ['@tarojs/plugin-generator', '@tarojs/plugin-html'],
@@ -57,12 +61,17 @@ export default defineConfig(async (merge, { command, mode }) => {
       ],
     },
     sass: {
-      resource: ['node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss'],
-      // data: '@import "@nutui/nutui-react-taro/dist/styles/variables.scss";',
-      // JMAPP 主题
-      // data: `@import '@nutui/nutui-react-taro/dist/styles/variables-jmapp.scss';`
-      // JRKF 主题
-      // data: `@import '@nutui/nutui-react-taro/dist/styles/variables-jrkf.scss';`
+      resource: [
+        'node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss',
+        'src/styles/mixins.scss',
+      ],
+      projectDirectory: process.cwd(),
+    },
+    url: {
+      enable: true,
+      config: {
+        limit: 10240, // 10KB 以下图片自动转 Base64
+      },
     },
     mini: {
       postcss: {
