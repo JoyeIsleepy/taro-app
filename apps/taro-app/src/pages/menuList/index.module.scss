@@ -2,7 +2,11 @@
   height: 100%;
   display: flex;
   position: relative; // 必须
-
+  // justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  // background-color: #f5f5f5;
   // nut-sidebar 隐藏内容区域
   :global(.nut-sidebar-content-wrap) {
     display: none;
@@ -17,9 +21,25 @@
     right: 0;
     height: 180px;
     background-color: #ec6606;
-    z-index: -1; // 不遮挡内容
+    z-index: 0; // 不遮挡内容
   }
   .memberCard {
     @include card-style;
+    margin-top: 60px;
+  }
+  .title-2 {
+    font-size: 24px;
+    color: #666;
+    margin-top: 8rpx;
+  }
+  .contentWrapper {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    height: calc(100% - 180px);
+    box-sizing: border-box;
+    padding: 20px;
+    overflow: hidden;
+    padding-right: 0;
   }
 }
