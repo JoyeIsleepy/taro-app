@@ -1,56 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { SideBar } from '@nutui/nutui-react-taro';
+import { useGlobalShare } from '../../utils/useGlobalShare.js';
 import styles from './index.module.scss';
 
+const categories = Array.from({ length: 20 }, (_, i) => ({
+  id: i,
+  title: `分类 ${i + 5}`,
+  modules: Array.from({ length: 5 }, (_, j) => `模块 ${j + 1}`),
+  content: `内容区域 ${i + 5}`,
+}));
+
 export default function Index() {
-  const sectionTops = useRef([]); // 记录相对 ScrollView 的 top
-  const [value, setValue] = useState(0);
-  const list = Array.from(new Array(20).keys());
-  const [scrollIntoView, setScrollIntoView] = useState('');
+  useGlobalShare();
 
-  useEffect(() => {
-    Taro.nextTick(() => {
-      const query = Taro.createSelectorQuery();
+  const [activeId, setActiveId] = useState(0);
+  const leftScrollRef = useRef(null);
+  const rightRefs = useRef([]);
 
-      list.forEach(item => {
-        // 注意：需要选择 scroll-view 内部的 section
-        query.select(`#section-${item}`).boundingClientRect();
-      });
+  const onRightScroll = () => {
+    const scrollTop = rightRefs.current[0]?.scrollTop || 0;
+    let currentId = 0;
 
-      query.select('#rightScroll').boundingClientRect(); // 获取 scroll-view 自身位置
-      query.exec(res => {
-        const scrollViewTop = res.pop().top; // 最后一个是 scroll-view 的 rect
-
-        // 把每个区块的 "相对 scroll-view 的位置" 算出来
-        sectionTops.current = res.map(r => r.top - scrollViewTop);
-      });
-    });
-  }, []);
-
-  // 左侧点击
-  const handleSideClick = index => {
-    setValue(index);
-    setScrollIntoView(`#section-${index}`);
-  };
-
-  // 右侧滚动
-  const handleRightScroll = e => {
-    const scrollTop = e.detail.scrollTop;
-
-    for (let i = 0; i < sectionTops.current.length - 1; i++) {
-      if (scrollTop >= sectionTops.current[i] && scrollTop < sectionTops.current[i + 1]) {
-        if (value !== i) setValue(i);
-        return;
+    for (let i = 0; i < rightRefs.current.length; i++) {
+      const el = rightRefs.current[i];
+      if (el) {
+        const { top } = el.getBoundingClientRect();
+        if (top <= 100) {
+          // 可调整阈值
+          currentId = i;
+        }
       }
     }
 
-    setValue(sectionTops.current.length - 1);
+    if (currentId !== activeId) {
+      setActiveId(currentId);
+      // 同步滚动左侧菜单到对应位置
+      scrollLeftTo(currentId);
+    }
+  };
+
+  // 左侧菜单滚动到指定分类
+  const scrollLeftTo = id => {
+    const itemHeight = 50; // 每个左侧项的高度（根据你的样式调整）
+    if (leftScrollRef.current) {
+      leftScrollRef.current.scrollTo({
+        top: id * itemHeight,
+        animated: true,
+      });
+    }
+  };
+
+  // 点击左侧菜单切换
+  const onLeftClick = id => {
+    setActiveId(id);
+    // 滚动右侧内容到对应区域
+    if (rightRefs.current[id]) {
+      rightRefs.current[id].scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
-    <View className={styles.container}>
+    <View className={styles.container} key="tab-menuList">
       <View className={styles.memberCard}>
         <View className={styles.item}>
           <View className={styles['title-1']}>🌟 zzk会员卡</View>
@@ -59,28 +71,29 @@ export default function Index() {
       </View>
 
       <View className={styles.contentWrapper}>
-        <SideBar value={value} onChange={handleSideClick} className={styles.leftBar}>
-          {list.map(item => (
-            <SideBar.Item key={item} title={`分类 ${item + 1}`} />
-          ))}
-        </SideBar>
-
-        <ScrollView
-          id="rightScroll"
-          scrollY
-          className={styles.rightContent}
-          scrollIntoView={scrollIntoView}
-          onScroll={handleRightScroll}
-        >
-          {list.map(item => (
+        {/* 左侧可滚动菜单 */}
+        <ScrollView scrollY className={styles.leftMenu} ref={leftScrollRef}>
+          {categories.map(cat => (
             <View
-              id={`section-${item}`}
-              key={item}
-              className={styles.section}
-              style={{ height: '400px' }}
+              key={cat.id}
+              className={`${styles.leftItem} ${activeId === cat.id ? styles.active : ''}`}
+              onClick={() => onLeftClick(cat.id)}
             >
-              <View className={styles.sectionTitle}>模块 {item + 1}</View>
-              <View className={styles.sectionBody}>内容区域 {item + 1}</View>
+              {cat.title}
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* 右侧内容区（独立滚动） */}
+        <ScrollView scrollY className={styles.rightContent} onScroll={onRightScroll}>
+          {categories.map((cat, index) => (
+            <View
+              key={cat.id}
+              ref={el => (rightRefs.current[index] = el)} // 收集 ref
+              className={styles.section}
+            >
+              <View className={styles.sectionTitle}>{cat.title}</View>
+              <View className={styles.sectionContent}>{cat.content}</View>
             </View>
           ))}
         </ScrollView>

@@ -1,16 +1,10 @@
 .container {
-  height: 100%;
+  height: calc(100vh - 50rpx);
   display: flex;
   position: relative; // 必须
-  // justify-content: center;
   align-items: center;
   flex-direction: column;
   box-sizing: border-box;
-  // background-color: #f5f5f5;
-  // nut-sidebar 隐藏内容区域
-  :global(.nut-sidebar-content-wrap) {
-    display: none;
-  }
 
   // 顶部 180px 橙色背景 + 底部灰色背景
   &::before {
@@ -26,6 +20,7 @@
   .memberCard {
     @include card-style;
     margin-top: 60px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // 柔和阴影，推荐
   }
   .title-2 {
     font-size: 24px;
@@ -41,5 +36,116 @@
     padding: 20px;
     overflow: hidden;
     padding-right: 0;
+  }
+}
+
+.leftMenu {
+  width: 180rpx;
+  background: #f8f8f8;
+  border-right: 1px solid #eee;
+}
+
+.leftItem {
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.leftItem.active {
+  background: #fff;
+  color: #fa2c19;
+  font-weight: bold;
+  border-left: 6rpx solid #fa2c19;
+}
+.rightContent {
+  flex: 1;
+  background: #f5f5f5; // 浅灰背景，更柔和
+  padding: 0 20rpx; // 左右留白
+}
+
+// 每个分类区块
+.section {
+  margin-top: 24rpx; // 区块间距
+  background: #fff;
+  border-radius: 24rpx; // 大圆角，现代感强
+  overflow: hidden; // 确保子元素圆角生效
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06); // 轻微浮起阴影
+}
+
+// 分类标题（吸顶感 + 红条）
+.sectionTitle {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 32rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+
+  // 左侧红条装饰（高亮当前分类）
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8rpx;
+    height: 40rpx;
+    background: #fa2c19; // 品牌红
+    border-radius: 4rpx;
+  }
+}
+
+// 内容区域（模块列表）
+.sectionContent {
+  padding: 20rpx 32rpx 40rpx; // 底部多留空间，避免最后一个模块贴底
+}
+
+// 示例：模块项（你可以根据实际内容调整）
+.moduleItem {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  // 示例：如果模块有图片 + 文字
+  .moduleImage {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 16rpx;
+    margin-right: 24rpx;
+    background: #f5f5f5;
+  }
+
+  .moduleInfo {
+    flex: 1;
+
+    .moduleName {
+      font-size: 32rpx;
+      color: #333;
+      margin-bottom: 8rpx;
+    }
+
+    .moduleDesc {
+      font-size: 24rpx;
+      color: #999;
+    }
+
+    .modulePrice {
+      font-size: 32rpx;
+      color: #fa2c19;
+      margin-top: 16rpx;
+    }
   }
 }

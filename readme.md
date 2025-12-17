@@ -71,3 +71,15 @@ taro create page pages/home/index
 ├─ pnpm-workspace.yaml
 └─ package.json
 ```
+
+
+/var/www/myapp
+│── docker-compose.yml
+├── Dockerfile
+│──packages/
+│──apps/
+│  ├─ node-server/       
+│     ├─ types/          
+│     ├── package.json
+│     ├── src/
+│── mongo_data/  

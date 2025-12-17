@@ -1,5 +1,5 @@
 import { defineConfig } from '@tarojs/cli';
-import vitePluginImp from 'vite-plugin-imp';
+import vitePluginImp from 'vite-plugin-imp'; 
 import path from 'path';
 
 import devConfig from './dev';
@@ -24,18 +24,12 @@ export default defineConfig(async (merge, { command, mode }) => {
       828: 1.81 / 2,
       375: 2 / 1,
     },
-    deviceRatio: {
-      640: 2.34 / 2,
-      750: 1,
-      375: 2,
-      828: 1.81 / 2,
-    },
     alias: {
       '@': path.resolve(process.cwd(), 'src'),
     },
     sourceRoot: 'src',
     outputRoot: 'dist',
-    plugins: ['@tarojs/plugin-generator', '@tarojs/plugin-html'],
+    plugins: ['@tarojs/plugin-html'],
     defineConstants: {},
     copy: {
       patterns: [],
@@ -43,29 +37,25 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     framework: 'react',
     compiler: {
-      type: 'vite',
-      vitePlugins: [
-        vitePluginImp({
-          libList: [
-            {
-              libName: '@nutui/nutui-react-taro',
-              style: name => {
-                // 按需引入 css 文件的处理，两种方式择其一
-                return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style/style.css`;
-              },
-              replaceOldImport: false,
-              camel2DashComponentName: false,
+      vitePlugins: [vitePluginImp({
+        libList: [
+          {
+            libName: '@nutui/nutui-react-taro',
+            style: (name) => {
+              return `@nutui/nutui-react-taro/dist/esm/${name}/style/css`
             },
-          ],
-        }),
-      ],
+            replaceOldImport: false,
+            camel2DashComponentName: false,
+          }
+        ]
+      })],
+      type: 'vite',
     },
     sass: {
-      resource: [
-        'node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss',
-        'src/styles/mixins.scss',
-      ],
-      projectDirectory: process.cwd(),
+        resource: [ 
+          'src/styles/mixins.scss',
+        ],
+        projectDirectory: process.cwd(),
     },
     url: {
       enable: true,

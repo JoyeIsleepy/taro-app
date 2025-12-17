@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View } from '@tarojs/components';
-import { Animate, Button, Space } from '@nutui/nutui-react-taro';
+import { Button } from '@nutui/nutui-react-taro';
 import { createOrder } from '../../server/order';
+import { useGlobalShare } from '../../utils/useGlobalShare.js';
+
 import styles from './index.module.scss';
 
 function Index() {
-  useEffect(() => {
-    // getData();
-  }, []);
+  useGlobalShare();
 
   async function getData() {
     const res = await createOrder({
@@ -19,14 +19,10 @@ function Index() {
   }
 
   return (
-    <View className={styles.order}>
+    <View className={styles.home} key="tab-index">
       <View>home--</View>
-      <Animate type="slide-right" action="click">
-        <Button type="primary">由右向左划入</Button>
-      </Animate>
       <Button onClick={getData}>创建订单</Button>
     </View>
   );
 }
-
 export default Index;

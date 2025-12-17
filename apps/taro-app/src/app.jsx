@@ -1,15 +1,9 @@
 // app.tsx
-import { useState, useEffect } from 'react';
-import Taro from '@tarojs/taro';
-import { useLaunch } from '@tarojs/taro';
-import { View } from '@tarojs/components';
-import { ConfigProvider } from '@nutui/nutui-react-taro';
-import Loading from './components/Loading';
-import '@nutui/nutui-react-taro/dist/styles/themes/default.css';
+import { useLaunch } from '@tarojs/taro'; 
+import { ConfigProvider } from '@nutui/nutui-react-taro';  
 import './app.scss';
 
-function App({ children }) {
-  const [loading, setLoading] = useState(false);
+function App({ children }) { 
   const themeVars = {
     nutuiColorPrimaryIcon: '#ec6606',
     nutuiColorPrimaryStop1: '#ec6606',

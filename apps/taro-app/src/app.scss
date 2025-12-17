@@ -1,24 +1,38 @@
-html,
-body,
-#app,
-.taro-app,
-.taro-page,
-.nut-configprovider {
-  height: 100%;
-}
-div.taro_page_shade,
-div.taro_router
-  > .taro_page.taro_page_show.taro_page_stationed:not(.taro_page_shade):not(.taro_tabbar_page):not(
-    :last-child
-  ) {
-  display: initial;
-}
+// html,
+// body,
+// #app,
+// .taro-app,
+// .taro-page {
+//   height: 100% !important;
+// }
+// div.taro_page_shade,
+// div.taro_router
+//   > .taro_page.taro_page_show.taro_page_stationed:not(.taro_page_shade):not(.taro_tabbar_page):not(
+//     :last-child
+//   ) {
+//   display: initial;
+// }
 
-div.taro_router > .taro_page {
-  transition-timing-function: cubic-bezier(0.26, 1, 0.48, 1);
+// .taro_page {
+//   position: absolute !important;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   min-height: 100vh !important;
+//   overflow: hidden; // 防止内容溢出影响层级
+// }
 
-  // 修复 h5 首页中使用 useLoad 导致出现路由动画的问题
-  &:first-child {
-    transition: none;
-  }
-}
+// // 如果有 tabBar，固定底部
+// .taro-tabbar__panel {
+//   height: calc(100% - 50px); // 根据你的 tabBar 高度调整，通常 50px 或 56px
+// }
+
+// div.taro_router > .taro_page {
+//   transition-timing-function: cubic-bezier(0.26, 1, 0.48, 1);
+
+//   // 修复 h5 首页中使用 useLoad 导致出现路由动画的问题
+//   &:first-child {
+//     transition: none;
+//   }
+// }

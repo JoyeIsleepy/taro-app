@@ -1,20 +1,23 @@
-# 1. 使用 Node 官方镜像
 FROM node:18-alpine
 
-# 2. 设置工作目录
 WORKDIR /app
 
-# 3. 仅复制 package.json（加速构建）
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+# 1. 启用 corepack（Node 16+ 自带）
+RUN corepack enable
 
-# 4. 安装依赖（即使你本地用 pnpm，这里依然建议用 npm）
-RUN npm install --production
+# 2. 拷贝 workspace 关键文件
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# 5. 复制项目源码
+# 3. 拷贝当前服务的 package.json
+COPY apps/node-server/package.json apps/node-server/
+
+# 4. 安装依赖（只装当前服务）
+RUN pnpm install --filter ./apps/node-server... --prod
+
+# 5. 拷贝源码
 COPY . .
 
-# 6. 暴露端口（和 docker-compose 对应）
-EXPOSE 3000
+WORKDIR /app/apps/node-server
 
-# 7. 启动 Koa 服务
-CMD ["node", "src/app.js"]
+EXPOSE 3001
+CMD ["pnpm", "start"]

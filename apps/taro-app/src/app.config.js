@@ -1,5 +1,11 @@
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/mine/index', 'pages/orders/index', 'pages/menuList/index'],
+  pages: [
+    'pages/index/index',
+    'pages/mine/index',
+    'pages/orders/index',
+    'pages/menuList/index',
+    'pages/menuManage/index',
+  ],
   tabBar: {
     color: '#000410',
     selectedColor: '#ed7006',
