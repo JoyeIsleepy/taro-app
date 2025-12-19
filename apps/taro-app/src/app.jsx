@@ -1,20 +1,19 @@
 // app.tsx
-import { useLaunch } from '@tarojs/taro'; 
-import { ConfigProvider } from '@nutui/nutui-react-taro';  
+import '@nutui/nutui-react-taro/dist/style.css';
+import { useLaunch } from '@tarojs/taro';
+import { ConfigProvider } from '@nutui/nutui-react-taro';
 import './app.scss';
 
-function App({ children }) { 
-  const themeVars = {
-    nutuiColorPrimaryIcon: '#ec6606',
-    nutuiColorPrimaryStop1: '#ec6606',
-    nutuiColorPrimaryStop2: '#ec6606',
-  };
-
+function App({ children }) {
   useLaunch(() => {
     console.log('App launched.');
   });
 
-  return <ConfigProvider theme={themeVars}>{children}</ConfigProvider>;
+  const theme = {
+    'nutui-form-item-label-font-size': '14px',
+  };
+
+  return <ConfigProvider theme={theme}>{children}</ConfigProvider>;
 }
 
 export default App;

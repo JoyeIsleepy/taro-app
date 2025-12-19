@@ -10,6 +10,8 @@ const categories = Array.from({ length: 20 }, (_, i) => ({
   content: `内容区域 ${i + 5}`,
 }));
 
+console.log(categories, 'ArrowRight');
+
 export default function Index() {
   useGlobalShare();
 

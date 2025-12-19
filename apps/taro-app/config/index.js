@@ -1,5 +1,4 @@
 import { defineConfig } from '@tarojs/cli';
-import vitePluginImp from 'vite-plugin-imp'; 
 import path from 'path';
 
 import devConfig from './dev';
@@ -37,25 +36,15 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     framework: 'react',
     compiler: {
-      vitePlugins: [vitePluginImp({
-        libList: [
-          {
-            libName: '@nutui/nutui-react-taro',
-            style: (name) => {
-              return `@nutui/nutui-react-taro/dist/esm/${name}/style/css`
-            },
-            replaceOldImport: false,
-            camel2DashComponentName: false,
-          }
-        ]
-      })],
+      vitePlugins: [],
       type: 'vite',
     },
     sass: {
-        resource: [ 
-          'src/styles/mixins.scss',
-        ],
-        projectDirectory: process.cwd(),
+      resource: [
+        'node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss',
+        'src/styles/mixins.scss',
+      ],
+      projectDirectory: process.cwd(),
     },
     url: {
       enable: true,
@@ -67,18 +56,12 @@ export default defineConfig(async (merge, { command, mode }) => {
       postcss: {
         pxtransform: {
           enable: true,
-          config: {},
-        },
-        miniCssExtractPluginOption: {
-          ignoreOrder: true,
-          filename: 'css/[name].[hash].css',
-          chunkFilename: 'css/[name].[chunkhash].css',
         },
         cssModules: {
-          enable: true, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: true, // ← 改成 true，开启小程序 CSS Modules
           config: {
-            namingPattern: 'module', // 转换模式，取值为 global/module
-            generateScopedName: '[name]__[local]___[hash:base64:5]',
+            namingPattern: 'module', // 或 'global'，推荐 'module'
+            generateScopedName: '[name]__[local]___[hash:base64:5]', // 与 H5 保持一致
           },
         },
       },

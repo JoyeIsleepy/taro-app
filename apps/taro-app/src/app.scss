@@ -22,17 +22,3 @@
 //   min-height: 100vh !important;
 //   overflow: hidden; // 防止内容溢出影响层级
 // }
-
-// // 如果有 tabBar，固定底部
-// .taro-tabbar__panel {
-//   height: calc(100% - 50px); // 根据你的 tabBar 高度调整，通常 50px 或 56px
-// }
-
-// div.taro_router > .taro_page {
-//   transition-timing-function: cubic-bezier(0.26, 1, 0.48, 1);
-
-//   // 修复 h5 首页中使用 useLoad 导致出现路由动画的问题
-//   &:first-child {
-//     transition: none;
-//   }
-// }

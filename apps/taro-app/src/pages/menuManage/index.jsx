@@ -1,40 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { View } from '@tarojs/components';
-import { Uploader } from '@nutui/nutui-react-taro';
-import { createOrder } from '../../server/order';
-import API from '@packages/api';
-import { useGlobalShare } from '../../utils/useGlobalShare.js';
+import React from 'react';
+import { Button, Form, Input, InputNumber, TextArea } from '@nutui/nutui-react-taro';
 
-import styles from './index.module.scss';
-
-function Index() {
-  useGlobalShare();
-  const uploadUrl = `http://localhost:3001/api${API.COMMON.UPLOAD_URL}`;
-  // const uploadUrl = 'https://zhangzhikai.xyz/api/public/file';
-
-  const onStart = () => {
-    console.log('start触发');
-  };
-
-  const beforeUpload = async files => {
-    console.log('beforeUpload files', files);
-    return files; // 不过滤
-  };
-
+const Demo1 = () => {
   return (
-    <View className={styles.content}>
-      <Uploader
-        url={uploadUrl}
-        autoUpload={true}
-        name="file"
-        onStart={onStart}
-        beforeUpload={beforeUpload}
-        style={{
-          marginInlineEnd: '10px',
-          marginBottom: '10px',
+    <>
+      <Form
+        labelPosition="right"
+        footer={
+          <>
+            <Button nativeType="submit" block type="primary">
+              提交
+            </Button>
+          </>
+        }
+        onFinish={values => {
+          console.log('提交成功', values);
         }}
-      />
-    </View>
+        onFinishFailed={errorInfo => {
+          console.log('提交失败', errorInfo);
+        }}
+      >
+        <Form.Item
+          align="center"
+          required
+          label="字段A"
+          name="username"
+          rules={[
+            { max: 5, message: '字段A不能超过5个字' },
+            { required: true, message: '请输入字段A' },
+          ]}
+        >
+          <Input className="nut-input-text" placeholder="请输入字段A" type="text" />
+        </Form.Item>
+        <Form.Item
+          label="字段D"
+          name="address"
+          rules={[
+            { max: 15, message: '字段D不能超过15个字' },
+            { required: true, message: '请输入字段D' },
+          ]}
+        >
+          <TextArea placeholder="请输入字段D" maxLength={100} />
+        </Form.Item>
+        <Form.Item
+          label="数量"
+          name="num"
+          rules={[
+            { max: 15, message: '字段D不能超过15个字' },
+            { required: true, message: '请输入字段D' },
+          ]}
+          getValueFromEvent={(...args) => args[0]}
+        >
+          <InputNumber />
+        </Form.Item>
+      </Form>
+    </>
   );
-}
-export default Index;
+};
+
+export default Demo1;

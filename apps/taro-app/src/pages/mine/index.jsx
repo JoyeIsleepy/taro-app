@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Image, Text } from '@tarojs/components';
-import { Button, Cell } from '@nutui/nutui-react-taro'; 
-import { ArrowRight, QrCode } from '@nutui/icons-react'
 import Taro from '@tarojs/taro';
+import { Cell, Button } from '@nutui/nutui-react-taro';
+import { QrCode, ArrowRight } from '@nutui/icons-react-taro';
 import styles from './index.module.scss';
-function Index() {
-  const renderCellTitle = text => (
-    <View className={styles.cellTitle}>
-      <QrCode className={styles.icon} />
-      <Text>{text}</Text>
-    </View>
-  );
 
+function Index() {
   function jumpManage() {
     Taro.navigateTo({
       url: '/pages/menuManage/index',
@@ -52,9 +46,26 @@ function Index() {
         <View className={styles['title-1']}>我的功能</View>
 
         <Cell.Group>
-          <Cell title={renderCellTitle('菜单管理')} extra={<ArrowRight />} onClick={jumpManage} />
-          <Cell title={renderCellTitle('我是标题')} extra={<ArrowRight />} />
-          <Cell title={renderCellTitle('我是标题')} extra={<ArrowRight />} />
+          <Cell extra={<ArrowRight />} onClick={jumpManage}>
+            <View slot="title" className={styles.cellTitle}>
+              <QrCode className={styles.icon} />
+              <Text>菜单管理</Text>
+            </View>
+          </Cell>
+
+          <Cell extra={<ArrowRight />}>
+            <View slot="title" className={styles.cellTitle}>
+              <QrCode className={styles.icon} />
+              <Text>我是标题</Text>
+            </View>
+          </Cell>
+
+          <Cell extra={<ArrowRight />}>
+            <View slot="title" className={styles.cellTitle}>
+              <QrCode className={styles.icon} />
+              <Text>我是标题</Text>
+            </View>
+          </Cell>
         </Cell.Group>
       </View>
     </View>

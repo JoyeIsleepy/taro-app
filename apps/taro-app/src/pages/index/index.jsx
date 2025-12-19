@@ -21,7 +21,7 @@ function Index() {
   return (
     <View className={styles.home} key="tab-index">
       <View>home--</View>
-      <Button onClick={getData}>创建订单</Button>
+      <Button openType="share">Share</Button>
     </View>
   );
 }
