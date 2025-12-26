@@ -15,23 +15,8 @@ export async function uploadToQiniu(fileBuffer, originalName, mimetype) {
     throwError('七牛云配置缺失', 500);
   }
 
-  // 提取扩展名（包含点，如 .png）
-  const ext = originalName ? '.' + originalName.split('.').pop().toLowerCase() : '';
-  // 如果没有扩展名，根据 mimetype 补充常见类型（可选增强）
-  if (!ext && mimetype) {
-    const extMap = {
-      'image/jpeg': '.jpg',
-      'image/png': '.png',
-      'image/gif': '.gif',
-      'image/webp': '.webp',
-      'video/mp4': '.mp4',
-      'audio/mpeg': '.mp3',
-    };
-    ext = extMap[mimetype] || '';
-  }
-
   // 上传时指定一个带扩展名的临时 key（七牛会用这个作为实际存储名）
-  const tempKey = `${Date.now()}_${Math.random().toString(36).substr(2, 8)}${ext}`;
+  const tempKey = `${Date.now()}_${originalName}`;
 
   const options = {
     scope: BUCKET,

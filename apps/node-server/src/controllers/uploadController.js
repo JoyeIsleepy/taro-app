@@ -3,13 +3,15 @@ import { uploadToQiniu } from '../services/qiniuService.js';
 
 export async function uploadFile(ctx) {
   const file = ctx.file;
+  const { fileName } = ctx.request.body;
 
   if (!file) {
     throwError('没有上传文件', 400);
   }
 
   try {
-    const { url, key, hash } = await uploadToQiniu(file.buffer, file.originalname, file.mimetype);
+    const realName = fileName || file.originalname;
+    const { url, key, hash } = await uploadToQiniu(file.buffer, realName, file.mimetype);
     ctx.body = {
       url,
       key,

@@ -1,70 +1,67 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, ScrollView } from '@tarojs/components';
-import { useGlobalShare } from '../../utils/useGlobalShare.js';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, ScrollView, Image, Text } from '@tarojs/components';
+import Taro from '@tarojs/taro';
+import { getProductList } from '@/server/order';
+import { categoryType as CATEGORY_ENUM } from '@/utils/enum';
 import styles from './index.module.scss';
 
-const categories = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  title: `分类 ${i + 5}`,
-  modules: Array.from({ length: 5 }, (_, j) => `模块 ${j + 1}`),
-  content: `内容区域 ${i + 5}`,
-}));
+export default function MenuPage() {
+  const [productList, setProductList] = useState([]);
+  const [activeCatId, setActiveCatId] = useState('');
+  const [loading, setLoading] = useState(true);
 
-console.log(categories, 'ArrowRight');
+  /** ================= 1. 请求数据 ================= */
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-export default function Index() {
-  useGlobalShare();
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await getProductList({ current: 1, pageSize: 50 });
+      const data = res?.list || res?.result?.list || [];
+      setProductList(data);
 
-  const [activeId, setActiveId] = useState(0);
-  const leftScrollRef = useRef(null);
-  const rightRefs = useRef([]);
-
-  const onRightScroll = () => {
-    const scrollTop = rightRefs.current[0]?.scrollTop || 0;
-    let currentId = 0;
-
-    for (let i = 0; i < rightRefs.current.length; i++) {
-      const el = rightRefs.current[i];
-      if (el) {
-        const { top } = el.getBoundingClientRect();
-        if (top <= 100) {
-          // 可调整阈值
-          currentId = i;
-        }
-      }
-    }
-
-    if (currentId !== activeId) {
-      setActiveId(currentId);
-      // 同步滚动左侧菜单到对应位置
-      scrollLeftTo(currentId);
+      const firstCat = data?.[0]?.categoryType?.[0];
+      if (firstCat) setActiveCatId(firstCat);
+    } catch (e) {
+      console.error(e);
+      Taro.showToast({ title: '加载失败', icon: 'none' });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 左侧菜单滚动到指定分类
-  const scrollLeftTo = id => {
-    const itemHeight = 50; // 每个左侧项的高度（根据你的样式调整）
-    if (leftScrollRef.current) {
-      leftScrollRef.current.scrollTo({
-        top: id * itemHeight,
-        animated: true,
-      });
-    }
-  };
+  /** ================= 2. 左侧分类 ================= */
+  const categories = useMemo(() => {
+    const set = new Set();
+    productList.forEach(item => {
+      item.categoryType?.forEach(c => set.add(c));
+    });
 
-  // 点击左侧菜单切换
-  const onLeftClick = id => {
-    setActiveId(id);
-    // 滚动右侧内容到对应区域
-    if (rightRefs.current[id]) {
-      rightRefs.current[id].scrollIntoView({
-        behavior: 'smooth',
-      });
-    }
-  };
+    return Array.from(set).map(id => ({
+      id,
+      title: CATEGORY_ENUM.find(i => i.value === id)?.label || id,
+    }));
+  }, [productList]);
+
+  /** ================= 3. 右侧商品（筛选后） ================= */
+  const filteredProducts = useMemo(() => {
+    if (!activeCatId) return productList;
+    return productList.filter(item => item.categoryType?.includes(activeCatId));
+  }, [productList, activeCatId]);
+
+  if (loading) {
+    return (
+      <View className={styles.container}>
+        <Text>加载中...</Text>
+      </View>
+    );
+  }
 
   return (
-    <View className={styles.container} key="tab-menuList">
+    <View className={styles.container}>
+      {/* ================= 顶部会员卡 ================= */}
       <View className={styles.memberCard}>
         <View className={styles.item}>
           <View className={styles['title-1']}>🌟 zzk会员卡</View>
@@ -72,32 +69,36 @@ export default function Index() {
         </View>
       </View>
 
-      <View className={styles.contentWrapper}>
-        {/* 左侧可滚动菜单 */}
-        <ScrollView scrollY className={styles.leftMenu} ref={leftScrollRef}>
+      {/* ================= 主体内容 ================= */}
+      <View className={styles.content}>
+        {/* 左侧分类 */}
+        <ScrollView scrollY className={styles.left}>
           {categories.map(cat => (
             <View
               key={cat.id}
-              className={`${styles.leftItem} ${activeId === cat.id ? styles.active : ''}`}
-              onClick={() => onLeftClick(cat.id)}
+              className={`${styles.leftItem} ${activeCatId === cat.id ? styles.active : ''}`}
+              onClick={() => setActiveCatId(cat.id)}
             >
               {cat.title}
             </View>
           ))}
         </ScrollView>
 
-        {/* 右侧内容区（独立滚动） */}
-        <ScrollView scrollY className={styles.rightContent} onScroll={onRightScroll}>
-          {categories.map((cat, index) => (
-            <View
-              key={cat.id}
-              ref={el => (rightRefs.current[index] = el)} // 收集 ref
-              className={styles.section}
-            >
-              <View className={styles.sectionTitle}>{cat.title}</View>
-              <View className={styles.sectionContent}>{cat.content}</View>
-            </View>
-          ))}
+        {/* 右侧商品（平铺） */}
+        <ScrollView scrollY className={styles.right}>
+          {filteredProducts.length === 0 ? (
+            <View className={styles.empty}>暂无商品</View>
+          ) : (
+            filteredProducts.map(item => (
+              <View key={item.id} className={styles.product}>
+                <Image className={styles.img} src={item.image?.[0]?.url || ''} mode="aspectFill" />
+                <View className={styles.info}>
+                  <Text className={styles.name}>{item.productName}</Text>
+                  <Text className={styles.price}>¥{item.price}</Text>
+                </View>
+              </View>
+            ))
+          )}
         </ScrollView>
       </View>
     </View>

@@ -1,9 +1,9 @@
-import Router from "@koa/router";
-import publicRouter from "./public.js";
-import authRouter from "./auth.js";
+import Router from '@koa/router';
+import publicRouter from './public.js';
+import authRouter from './auth.js';
 
 const router = new Router({
-  prefix: "/api",
+  prefix: '/api',
 });
 
 router.use(publicRouter.routes());

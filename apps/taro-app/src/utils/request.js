@@ -8,7 +8,14 @@ function getToken() {
 }
 
 const request = options => {
-  const { url, method = 'GET', data, header = {} } = options;
+  const {
+    url,
+    method = 'GET',
+    data,
+    header = {},
+    showSuccessToast = false,
+    successText = '操作成功',
+  } = options;
 
   return new Promise((resolve, reject) => {
     Taro.request({
@@ -31,10 +38,13 @@ const request = options => {
           // Taro.redirectTo({ url: "/pages/login/index" });
           resolve(data);
         } else {
-          Taro.showToast({
-            title: data?.message || '请求失败',
-            icon: 'none',
-          });
+          if (showSuccessToast) {
+            Taro.showToast({
+              title: data?.message || successText, // 优先用接口返回的message，否则用自定义文案
+              icon: 'success',
+              duration: 2000,
+            });
+          }
           resolve(data);
         }
       },
